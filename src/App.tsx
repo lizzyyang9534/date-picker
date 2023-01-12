@@ -1,24 +1,19 @@
-import React from 'react';
-import logo from './logo.svg';
+import { useState } from 'react';
 import './App.css';
+import DatePicker from './components/datePicker';
 
 function App() {
+  const [date, setDate] = useState(new Date());
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <DatePicker
+        date={date}
+        onSelect={(date) => {
+          console.log(date);
+          setDate(date);
+        }}
+      />
     </div>
   );
 }
