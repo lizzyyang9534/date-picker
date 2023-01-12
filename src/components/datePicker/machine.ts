@@ -1,6 +1,6 @@
 import { createMachine, assign } from 'xstate';
 import * as R from 'ramda';
-import { getDisplayDates } from './utils';
+import { getDisplayDates, getLastMonth, getNextMonth } from './utils';
 
 enum State {
   INIT = 'INIT',
@@ -15,6 +15,8 @@ enum Event {
   SWITCH_MONTH_VIEW = 'SWITCH_MONTH_VIEW',
   SELECT_YEAR = 'SELECT_YEAR',
   SWITCH_YEAR_VIEW = 'SWITCH_YEAR_VIEW',
+  PREVIOUS = 'PREVIOUS',
+  NEXT = 'NEXT',
 }
 
 type DatePickerContext = {
@@ -44,6 +46,12 @@ const datePickerMachine = createMachine<DatePickerContext>(
         on: {
           [Event.SWITCH_MONTH_VIEW]: {
             target: State.MONTH_VIEW,
+          },
+          [Event.PREVIOUS]: {
+            actions: ['goLastMonth', 'assignDates'],
+          },
+          [Event.NEXT]: {
+            actions: ['goNextMonth', 'assignDates'],
           },
         },
       },
@@ -86,16 +94,25 @@ const datePickerMachine = createMachine<DatePickerContext>(
       assignDates: assign({
         dates: ({ month, year }) => {
           const dates = getDisplayDates(month, year, 42);
-          console.log(dates);
-
           return dates;
         },
       }),
       assignMonth: assign({
-        month: (_, event) => {
-          console.log(event.month);
-          return event.month;
-        },
+        month: (_, { month }) => month,
+      }),
+      goLastMonth: assign(({ year, month }) => {
+        const lastMonth = getLastMonth(month);
+        return {
+          month: lastMonth,
+          year: lastMonth > month ? year - 1 : year,
+        };
+      }),
+      goNextMonth: assign(({ year, month }) => {
+        const nextMonth = getNextMonth(month);
+        return {
+          month: nextMonth,
+          year: nextMonth < month ? year + 1 : year,
+        };
       }),
       assignYear: assign({
         year: (_, event) => event.year,

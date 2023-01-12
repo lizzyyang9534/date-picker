@@ -9,7 +9,6 @@ export const getDisplayDates = (
   year: number,
   dayCount: number
 ): number[] => {
-  console.log(year, month);
   const startDate = new Date(year, month, 1);
   const days = daysInMonth(month, year);
   const dayOfStartDate = startDate.getDay();

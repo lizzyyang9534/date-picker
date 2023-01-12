@@ -32,7 +32,12 @@ const DatePicker = ({ date, onSelect }: DatePickerProps) => {
   return (
     <Flex direction="column" width="250px">
       <Flex justify="space-between" align="center" gap={2}>
-        <Button variant="ghost">{'<'}</Button>
+        <Button
+          variant="ghost"
+          onClick={() => send({ type: DATE_PICKER_EVENT.PREVIOUS })}
+        >
+          {'<'}
+        </Button>
         <Button flex="1" onClick={handleSwitchView}>
           {isDateView
             ? `${MONTHS[month]} ${year}`
@@ -40,7 +45,12 @@ const DatePicker = ({ date, onSelect }: DatePickerProps) => {
             ? year
             : `${years[0]} - ${years[years.length - 1]}`}
         </Button>
-        <Button variant="ghost">{'>'}</Button>
+        <Button
+          variant="ghost"
+          onClick={() => send({ type: DATE_PICKER_EVENT.NEXT })}
+        >
+          {'>'}
+        </Button>
       </Flex>
       {isDateView && (
         <SimpleGrid columns={7} spacing={1} mt={2}>
