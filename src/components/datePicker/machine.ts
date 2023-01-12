@@ -65,6 +65,12 @@ const datePickerMachine = createMachine<DatePickerContext>(
             target: State.YEAR_VIEW,
             actions: ['assignYears'],
           },
+          [Event.PREVIOUS]: {
+            actions: ['goLastYear', 'assignDates'],
+          },
+          [Event.NEXT]: {
+            actions: ['goNextYear', 'assignDates'],
+          },
         },
       },
       [State.YEAR_VIEW]: {
@@ -113,6 +119,12 @@ const datePickerMachine = createMachine<DatePickerContext>(
           month: nextMonth,
           year: nextMonth < month ? year + 1 : year,
         };
+      }),
+      goLastYear: assign({
+        year: ({ year }) => year - 1,
+      }),
+      goNextYear: assign({
+        year: ({ year }) => year + 1,
       }),
       assignYear: assign({
         year: (_, event) => event.year,
