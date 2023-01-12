@@ -74,36 +74,41 @@ const DatePicker = ({ date, onSelect }: DatePickerProps) => {
       )}
       {isMonthView && (
         <SimpleGrid columns={4} spacing={1} mt={2}>
-          {MONTHS.map((month, index) => (
+          {MONTHS.map((m, monthIndex) => (
             <Button
-              key={month}
-              variant="ghost"
+              key={m}
+              variant={monthIndex === month ? 'solid' : 'ghost'}
               size="sm"
               boxSize="40px"
               borderRadius="full"
+              colorScheme={monthIndex === month ? 'brand' : 'gray'}
               onClick={() =>
-                send({ type: DATE_PICKER_EVENT.SELECT_MONTH, month: index })
+                send({
+                  type: DATE_PICKER_EVENT.SELECT_MONTH,
+                  month: monthIndex,
+                })
               }
             >
-              {month.slice(0, 3)}
+              {m.slice(0, 3)}
             </Button>
           ))}
         </SimpleGrid>
       )}
       {isYearView && (
         <SimpleGrid columns={4} spacing={1} mt={2}>
-          {years.map((year) => (
+          {years.map((y) => (
             <Button
               key={month}
-              variant="ghost"
+              variant={y === year ? 'solid' : 'ghost'}
               size="sm"
               boxSize="40px"
               borderRadius="full"
+              colorScheme={y === year ? 'brand' : 'gray'}
               onClick={() =>
-                send({ type: DATE_PICKER_EVENT.SELECT_YEAR, year })
+                send({ type: DATE_PICKER_EVENT.SELECT_YEAR, year: y })
               }
             >
-              {year}
+              {y}
             </Button>
           ))}
         </SimpleGrid>
