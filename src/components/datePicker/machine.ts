@@ -1,6 +1,6 @@
 import { createMachine, assign } from 'xstate';
-import * as R from 'ramda';
 import { getDisplayDates, getLastMonth, getNextMonth } from './utils';
+import { range } from '../../utils/list';
 
 enum State {
   INIT = 'INIT',
@@ -79,6 +79,12 @@ const datePickerMachine = createMachine<DatePickerContext>(
             target: State.MONTH_VIEW,
             actions: ['assignYear'],
           },
+          [Event.PREVIOUS]: {
+            actions: ['goLastDecade'],
+          },
+          [Event.NEXT]: {
+            actions: ['goNextDecade'],
+          },
         },
       },
     },
@@ -132,7 +138,20 @@ const datePickerMachine = createMachine<DatePickerContext>(
       assignYears: assign({
         years: ({ year }) => {
           const startYear = year - (year % 10);
-          return R.range(startYear - 1, startYear + 11);
+          return range(startYear - 1, startYear + 10);
+        },
+      }),
+      goLastDecade: assign({
+        years: ({ years }) => {
+          return range(years[0] - 10, years[0] + 1);
+        },
+      }),
+      goNextDecade: assign({
+        years: ({ years }) => {
+          return range(
+            years[years.length - 1] - 1,
+            years[years.length - 1] + 10
+          );
         },
       }),
     },

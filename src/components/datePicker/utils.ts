@@ -1,4 +1,4 @@
-import * as R from 'ramda';
+import { range } from '../../utils/list';
 
 export const daysInMonth = (month: number, year: number) => {
   return new Date(year, getNextMonth(month), 0).getDate();
@@ -38,14 +38,14 @@ export const getDisplayDates = (
   const totalDaysInThisMonth = daysInMonth(month, year);
   const dayOfStartDate = startDate.getDay();
 
-  const daysInThisMonth = R.range(1, totalDaysInThisMonth + 1).map(
+  const daysInThisMonth = range(1, totalDaysInThisMonth).map(
     (d) => new Date(year, month, d)
   );
 
   const nextMonth = getNextMonthWithYear(month, year);
-  const daysInNextMonth = R.range(
+  const daysInNextMonth = range(
     1,
-    dayCount - (dayOfStartDate + totalDaysInThisMonth) + 1
+    dayCount - (dayOfStartDate + totalDaysInThisMonth)
   ).map((d) => new Date(nextMonth.year, nextMonth.month, d));
 
   const displayDates = [...daysInThisMonth, ...daysInNextMonth];
@@ -53,9 +53,9 @@ export const getDisplayDates = (
   if (dayOfStartDate > 0) {
     const lastMonth = getLastMonthWithYear(month, year);
     const totalDaysInLastMonth = daysInMonth(lastMonth.month, lastMonth.year);
-    const datesInLastMonth = R.range(
+    const datesInLastMonth = range(
       totalDaysInLastMonth - dayOfStartDate + 1,
-      totalDaysInLastMonth + 1
+      totalDaysInLastMonth
     ).map((d) => new Date(lastMonth.year, lastMonth.month, d));
 
     return [...datesInLastMonth, ...displayDates];
