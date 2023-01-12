@@ -10,6 +10,7 @@ enum State {
 }
 
 enum Event {
+  SELECT_DATE = 'SELECT_DATE',
   SWITCH_DATE_VIEW = 'SWITCH_DATE_VIEW',
   SELECT_MONTH = 'SELECT_MONTH',
   SWITCH_MONTH_VIEW = 'SWITCH_MONTH_VIEW',
@@ -20,8 +21,9 @@ enum Event {
 }
 
 type DatePickerContext = {
-  selectedDate?: Date | string;
+  initialDate?: Date | string;
   defaultDate: Date;
+  selectedDate: Date | null;
   dates: Date[];
   month: number;
   year: number;
@@ -34,6 +36,7 @@ const datePickerMachine = createMachine<DatePickerContext>(
   {
     context: {
       defaultDate: NOW,
+      selectedDate: null,
       dates: [],
       month: NOW.getMonth(),
       year: NOW.getFullYear(),
@@ -44,6 +47,9 @@ const datePickerMachine = createMachine<DatePickerContext>(
     states: {
       [State.DATE_VIEW]: {
         on: {
+          [Event.SELECT_DATE]: {
+            actions: ['assignSelectedDate'],
+          },
           [Event.SWITCH_MONTH_VIEW]: {
             target: State.MONTH_VIEW,
           },
@@ -92,16 +98,19 @@ const datePickerMachine = createMachine<DatePickerContext>(
   {
     actions: {
       assignDefaultDate: assign({
-        defaultDate: ({ selectedDate }) =>
-          typeof selectedDate === 'string'
-            ? new Date(selectedDate)
-            : typeof selectedDate === 'object'
-            ? selectedDate
+        defaultDate: ({ initialDate }) =>
+          typeof initialDate === 'string'
+            ? new Date(initialDate)
+            : typeof initialDate === 'object'
+            ? initialDate
             : new Date(),
       }),
       assignMonthAndYear: assign({
         month: ({ defaultDate }) => defaultDate.getMonth(),
         year: ({ defaultDate }) => defaultDate.getFullYear(),
+      }),
+      assignSelectedDate: assign({
+        selectedDate: (_, { date }) => date,
       }),
       assignDates: assign({
         dates: ({ month, year }) => {

@@ -7,15 +7,15 @@ import {
   DATE_PICKER_EVENT,
   DATE_PICKER_STATE,
 } from './machine';
-import { isToday } from './utils';
+import { isSameDay, isToday } from './utils';
 
 const DatePicker = ({ date, onSelect }: DatePickerProps) => {
   const [state, send] = useMachine(datePickerMachine, {
     context: {
-      selectedDate: date,
+      initialDate: date,
     },
   });
-  const { month, year, years, dates } = state.context;
+  const { month, year, years, dates, selectedDate } = state.context;
 
   const isDateView = state.matches(DATE_PICKER_STATE.DATE_VIEW);
   const isMonthView = state.matches(DATE_PICKER_STATE.MONTH_VIEW);
@@ -60,24 +60,31 @@ const DatePicker = ({ date, onSelect }: DatePickerProps) => {
               {day}
             </Text>
           ))}
-          {dates.map((d, i) => (
-            <Button
-              key={i}
-              variant="ghost"
-              size="xs"
-              boxSize="32px"
-              borderRadius="full"
-              color={
-                isToday(d)
-                  ? 'brand.500'
-                  : d.getMonth() !== month
-                  ? 'brandGray.700'
-                  : 'black'
-              }
-            >
-              {d.getDate()}
-            </Button>
-          ))}
+          {dates.map((d, i) => {
+            const isSelected = selectedDate && isSameDay(selectedDate, d);
+            return (
+              <Button
+                key={i}
+                variant={isSelected ? 'solid' : 'ghost'}
+                size="xs"
+                boxSize="32px"
+                borderRadius="full"
+                color={
+                  isToday(d) && !isSelected
+                    ? 'brand.500'
+                    : d.getMonth() !== month
+                    ? 'brandGray.700'
+                    : undefined
+                }
+                colorScheme={isSelected ? 'brand' : 'gray'}
+                onClick={() =>
+                  send({ type: DATE_PICKER_EVENT.SELECT_DATE, date: d })
+                }
+              >
+                {d.getDate()}
+              </Button>
+            );
+          })}
         </SimpleGrid>
       )}
       {isMonthView && (

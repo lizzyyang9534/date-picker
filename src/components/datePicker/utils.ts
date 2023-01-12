@@ -28,6 +28,13 @@ export const isToday = (date: Date) => {
     date.getFullYear() === today.getFullYear()
   );
 };
+export const isSameDay = (dateLeft: Date, dateRight: Date) => {
+  return (
+    dateLeft.getDate() === dateRight.getDate() &&
+    dateLeft.getMonth() === dateRight.getMonth() &&
+    dateLeft.getFullYear() === dateRight.getFullYear()
+  );
+};
 
 export const getDisplayDates = (
   month: number,
