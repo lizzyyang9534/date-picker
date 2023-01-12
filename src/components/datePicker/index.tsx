@@ -14,7 +14,7 @@ const DatePicker = ({ date, onSelect }: DatePickerProps) => {
       selectedDate: date,
     },
   });
-  const { month, year, years } = state.context;
+  const { month, year, years, dates } = state.context;
 
   const isDateView = state.matches(DATE_PICKER_STATE.DATE_VIEW);
   const isMonthView = state.matches(DATE_PICKER_STATE.MONTH_VIEW);
@@ -49,19 +49,17 @@ const DatePicker = ({ date, onSelect }: DatePickerProps) => {
               {day}
             </Text>
           ))}
-          {Array(42)
-            .fill(0)
-            .map((_, i) => (
-              <Button
-                key={i}
-                variant="ghost"
-                size="xs"
-                boxSize="32px"
-                borderRadius="full"
-              >
-                {i}
-              </Button>
-            ))}
+          {dates.map((date, i) => (
+            <Button
+              key={i}
+              variant="ghost"
+              size="xs"
+              boxSize="32px"
+              borderRadius="full"
+            >
+              {date}
+            </Button>
+          ))}
         </SimpleGrid>
       )}
       {isMonthView && (

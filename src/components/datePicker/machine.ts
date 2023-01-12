@@ -1,6 +1,6 @@
-import { DateData } from './../../types';
 import { createMachine, assign } from 'xstate';
 import * as R from 'ramda';
+import { getDisplayDates } from './utils';
 
 enum State {
   INIT = 'INIT',
@@ -20,7 +20,7 @@ enum Event {
 type DatePickerContext = {
   selectedDate?: Date | string;
   defaultDate: Date;
-  dates: DateData[];
+  dates: number[];
   month: number;
   year: number;
   years: number[];
@@ -37,7 +37,7 @@ const datePickerMachine = createMachine<DatePickerContext>(
       year: NOW.getFullYear(),
       years: [],
     },
-    entry: ['assignDefaultDate', 'assignMonthAndYear'],
+    entry: ['assignDefaultDate', 'assignMonthAndYear', 'assignDates'],
     initial: State.DATE_VIEW,
     states: {
       [State.DATE_VIEW]: {
@@ -51,7 +51,7 @@ const datePickerMachine = createMachine<DatePickerContext>(
         on: {
           [Event.SELECT_MONTH]: {
             target: State.DATE_VIEW,
-            actions: ['assignMonth'],
+            actions: ['assignMonth', 'assignDates'],
           },
           [Event.SWITCH_YEAR_VIEW]: {
             target: State.YEAR_VIEW,
@@ -83,11 +83,19 @@ const datePickerMachine = createMachine<DatePickerContext>(
         month: ({ defaultDate }) => defaultDate.getMonth(),
         year: ({ defaultDate }) => defaultDate.getFullYear(),
       }),
-      // assignDates: assign({
-      //   dates: (_) => [], // TODO: implement
-      // }),
+      assignDates: assign({
+        dates: ({ month, year }) => {
+          const dates = getDisplayDates(month, year, 42);
+          console.log(dates);
+
+          return dates;
+        },
+      }),
       assignMonth: assign({
-        month: (_, event) => event.month,
+        month: (_, event) => {
+          console.log(event.month);
+          return event.month;
+        },
       }),
       assignYear: assign({
         year: (_, event) => event.year,
