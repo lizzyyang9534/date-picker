@@ -7,6 +7,7 @@ import {
   DATE_PICKER_EVENT,
   DATE_PICKER_STATE,
 } from './machine';
+import { isToday } from './utils';
 
 const DatePicker = ({ date, onSelect }: DatePickerProps) => {
   const [state, send] = useMachine(datePickerMachine, {
@@ -59,15 +60,22 @@ const DatePicker = ({ date, onSelect }: DatePickerProps) => {
               {day}
             </Text>
           ))}
-          {dates.map((date, i) => (
+          {dates.map((d, i) => (
             <Button
               key={i}
               variant="ghost"
               size="xs"
               boxSize="32px"
               borderRadius="full"
+              color={
+                isToday(d)
+                  ? 'brand.500'
+                  : d.getMonth() !== month
+                  ? 'brandGray.700'
+                  : 'black'
+              }
             >
-              {date}
+              {d.getDate()}
             </Button>
           ))}
         </SimpleGrid>

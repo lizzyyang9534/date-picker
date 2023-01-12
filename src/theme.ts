@@ -9,6 +9,8 @@ const theme = extendTheme({
     },
     brandGray: {
       500: '#eee',
+      600: '#e9e9e9',
+      700: '#ccc',
     },
   },
 });

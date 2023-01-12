@@ -22,7 +22,7 @@ enum Event {
 type DatePickerContext = {
   selectedDate?: Date | string;
   defaultDate: Date;
-  dates: number[];
+  dates: Date[];
   month: number;
   year: number;
   years: number[];
