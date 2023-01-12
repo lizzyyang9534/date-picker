@@ -14,20 +14,31 @@ const DatePicker = ({ date, onSelect }: DatePickerProps) => {
       selectedDate: date,
     },
   });
-  const { month, year } = state.context;
+  const { month, year, years } = state.context;
 
   const isDateView = state.matches(DATE_PICKER_STATE.DATE_VIEW);
   const isMonthView = state.matches(DATE_PICKER_STATE.MONTH_VIEW);
+  const isYearView = state.matches(DATE_PICKER_STATE.YEAR_VIEW);
+
+  const handleSwitchView = () => {
+    if (isDateView) {
+      send({ type: DATE_PICKER_EVENT.SWITCH_MONTH_VIEW });
+    }
+    if (isMonthView) {
+      send({ type: DATE_PICKER_EVENT.SWITCH_YEAR_VIEW });
+    }
+  };
 
   return (
     <Flex direction="column" width="250px">
       <Flex justify="space-between" align="center" gap={2}>
         <Button variant="ghost">{'<'}</Button>
-        <Button
-          flex="1"
-          onClick={() => send({ type: DATE_PICKER_EVENT.SWITCH_MONTH_VIEW })}
-        >
-          {isDateView ? `${MONTHS[month]} ${year}` : year}
+        <Button flex="1" onClick={handleSwitchView}>
+          {isDateView
+            ? `${MONTHS[month]} ${year}`
+            : isMonthView
+            ? year
+            : `${years[0]} - ${years[years.length - 1]}`}
         </Button>
         <Button variant="ghost">{'>'}</Button>
       </Flex>
@@ -67,6 +78,24 @@ const DatePicker = ({ date, onSelect }: DatePickerProps) => {
               }
             >
               {month.slice(0, 3)}
+            </Button>
+          ))}
+        </SimpleGrid>
+      )}
+      {isYearView && (
+        <SimpleGrid columns={4} spacing={1} mt={2}>
+          {years.map((year) => (
+            <Button
+              key={month}
+              variant="ghost"
+              size="sm"
+              boxSize="40px"
+              borderRadius="full"
+              onClick={() =>
+                send({ type: DATE_PICKER_EVENT.SELECT_YEAR, year })
+              }
+            >
+              {year}
             </Button>
           ))}
         </SimpleGrid>

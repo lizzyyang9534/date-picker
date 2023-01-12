@@ -1,7 +1,9 @@
 import { DateData } from './../../types';
 import { createMachine, assign } from 'xstate';
+import * as R from 'ramda';
 
 enum State {
+  INIT = 'INIT',
   DATE_VIEW = 'DATE_VIEW',
   MONTH_VIEW = 'MONTH_VIEW',
   YEAR_VIEW = 'YEAR_VIEW',
@@ -21,20 +23,22 @@ type DatePickerContext = {
   dates: DateData[];
   month: number;
   year: number;
+  years: number[];
 };
 
 const NOW = new Date();
 
 const datePickerMachine = createMachine<DatePickerContext>(
   {
-    initial: State.DATE_VIEW,
     context: {
       defaultDate: NOW,
       dates: [],
       month: NOW.getMonth(),
       year: NOW.getFullYear(),
+      years: [],
     },
-    entry: ['convertSelectedDate', 'assignDefaultDate', 'assignDates'],
+    entry: ['assignDefaultDate', 'assignMonthAndYear'],
+    initial: State.DATE_VIEW,
     states: {
       [State.DATE_VIEW]: {
         on: {
@@ -51,6 +55,7 @@ const datePickerMachine = createMachine<DatePickerContext>(
           },
           [Event.SWITCH_YEAR_VIEW]: {
             target: State.YEAR_VIEW,
+            actions: ['assignYears'],
           },
         },
       },
@@ -60,39 +65,38 @@ const datePickerMachine = createMachine<DatePickerContext>(
             target: State.MONTH_VIEW,
             actions: ['assignYear'],
           },
-          [Event.SWITCH_YEAR_VIEW]: {
-            target: State.YEAR_VIEW,
-          },
         },
       },
     },
   },
   {
     actions: {
-      convertSelectedDate: assign({
-        defaultDate: ({ defaultDate: selectedDate }) =>
+      assignDefaultDate: assign({
+        defaultDate: ({ selectedDate }) =>
           typeof selectedDate === 'string'
             ? new Date(selectedDate)
             : typeof selectedDate === 'object'
             ? selectedDate
             : new Date(),
       }),
-      assignDefaultDate: assign(({ defaultDate: selectedDate }) => {
-        const date = selectedDate || new Date();
-        return {
-          defaultDate: date,
-          month: date.getMonth(),
-          year: date.getFullYear(),
-        };
+      assignMonthAndYear: assign({
+        month: ({ defaultDate }) => defaultDate.getMonth(),
+        year: ({ defaultDate }) => defaultDate.getFullYear(),
       }),
-      // assignDates: assign(() => {
-      //   return { dates: [] };
+      // assignDates: assign({
+      //   dates: (_) => [], // TODO: implement
       // }),
       assignMonth: assign({
         month: (_, event) => event.month,
       }),
       assignYear: assign({
-        year: (_, event) => event.data,
+        year: (_, event) => event.year,
+      }),
+      assignYears: assign({
+        years: ({ year }) => {
+          const startYear = year - (year % 10);
+          return R.range(startYear - 1, startYear + 11);
+        },
       }),
     },
   }
