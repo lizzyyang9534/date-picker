@@ -72,7 +72,7 @@ const DatePicker = ({ date, onSelect }: DatePickerProps) => {
         >
           {'<'}
         </Button>
-        <Button flex="1" onClick={handleSwitchView}>
+        <Button variant="ghost" flex="1" onClick={handleSwitchView}>
           {isDateView
             ? `${MONTHS[month]} ${year}`
             : isMonthView
