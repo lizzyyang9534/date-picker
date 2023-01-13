@@ -17,6 +17,7 @@ enum Event {
   SWITCH_YEAR_VIEW = 'SWITCH_YEAR_VIEW',
   PREVIOUS = 'PREVIOUS',
   NEXT = 'NEXT',
+  UPDATE_SELECTED_DATE = 'UPDATE_SELECTED_DATE',
 }
 
 type DatePickerContext = {
@@ -41,7 +42,7 @@ const datePickerMachine = createMachine<DatePickerContext>(
       year: NOW.getFullYear(),
       years: [],
     },
-    entry: ['assignDefaultDate', 'assignMonthAndYear', 'assignDates'],
+    entry: ['assignDefaultDate', 'assignDefaultMonthAndYear', 'assignDates'],
     initial: State.DATE_VIEW,
     states: {
       [State.DATE_VIEW]: {
@@ -93,6 +94,11 @@ const datePickerMachine = createMachine<DatePickerContext>(
         },
       },
     },
+    on: {
+      [Event.UPDATE_SELECTED_DATE]: {
+        actions: ['assignSelectedDate', 'updateMonthAndYear', 'assignDates'],
+      },
+    },
   },
   {
     actions: {
@@ -104,7 +110,7 @@ const datePickerMachine = createMachine<DatePickerContext>(
             ? initialDate
             : new Date(),
       }),
-      assignMonthAndYear: assign({
+      assignDefaultMonthAndYear: assign({
         month: ({ defaultDate }) => defaultDate.getMonth(),
         year: ({ defaultDate }) => defaultDate.getFullYear(),
       }),
@@ -161,6 +167,12 @@ const datePickerMachine = createMachine<DatePickerContext>(
             years[years.length - 1] + 10
           );
         },
+      }),
+      updateMonthAndYear: assign({
+        month: ({ selectedDate, month }) =>
+          selectedDate ? selectedDate.getMonth() : month,
+        year: ({ selectedDate, year }) =>
+          selectedDate ? selectedDate.getFullYear() : year,
       }),
     },
   }

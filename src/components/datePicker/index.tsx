@@ -2,6 +2,8 @@ import {
   Button,
   Flex,
   Input,
+  InputGroup,
+  InputLeftElement,
   Popover,
   PopoverBody,
   PopoverContent,
@@ -9,6 +11,7 @@ import {
   Portal,
   SimpleGrid,
   Text,
+  useDisclosure,
 } from '@chakra-ui/react';
 import { useMachine } from '@xstate/react';
 import { DatePickerProps } from './types';
@@ -18,7 +21,14 @@ import {
   DATE_PICKER_EVENT,
   DATE_PICKER_STATE,
 } from './machine';
-import { isSameDay, isToday } from './utils';
+import {
+  formatISODate,
+  isSameDay,
+  isToday,
+  isValidISODateString,
+} from './utils';
+import { useEffect, useState } from 'react';
+import { CalendarIcon } from '@chakra-ui/icons';
 
 const DatePicker = ({ date, onSelect }: DatePickerProps) => {
   const [state, send] = useMachine(datePickerMachine, {
@@ -47,6 +57,10 @@ const DatePicker = ({ date, onSelect }: DatePickerProps) => {
       send({ type: DATE_PICKER_EVENT.SWITCH_YEAR_VIEW });
     }
   };
+
+  useEffect(() => {
+    send({ type: DATE_PICKER_EVENT.UPDATE_SELECTED_DATE, date });
+  }, [date, send]);
 
   return (
     <Flex direction="column" width="250px" minH="296px">
@@ -156,15 +170,55 @@ const DatePicker = ({ date, onSelect }: DatePickerProps) => {
 };
 
 const DatePickerInput = ({ date, onSelect }: DatePickerProps) => {
+  const { isOpen, onToggle, onClose } = useDisclosure();
+
+  const [innerDate, setInnerDate] = useState(date);
+  const [inputValue, setInputValue] = useState('');
+  const [isInvalid, setIsInvalid] = useState(false);
+
+  const handleDateInput = (dateString: string) => {
+    const isValid = isValidISODateString(dateString);
+    if (isValid) {
+      setInnerDate(new Date(dateString));
+    }
+    setIsInvalid(!isValid);
+  };
+
   return (
-    <Popover placement="bottom-start" offset={[0, 0]}>
+    <Popover
+      placement="bottom-start"
+      offset={[0, 0]}
+      isOpen={isOpen}
+      onClose={onClose}
+    >
       <PopoverTrigger>
-        <Input />
+        <InputGroup>
+          <InputLeftElement
+            color={isOpen ? 'blue.500' : 'inherit'}
+            cursor="pointer"
+            children={<CalendarIcon />}
+            onClick={onToggle}
+          />
+          <Input
+            placeholder="YYYY-MM-DD"
+            value={inputValue}
+            isInvalid={!!inputValue && isInvalid}
+            onBlur={(e) => handleDateInput(e.target.value)}
+            onChange={(e) => setInputValue(e.target.value)}
+          />
+        </InputGroup>
       </PopoverTrigger>
       <Portal>
         <PopoverContent w="auto">
           <PopoverBody>
-            <DatePicker date={date} onSelect={onSelect} />
+            <DatePicker
+              date={innerDate}
+              onSelect={(date) => {
+                onSelect(date);
+                onClose();
+                setInputValue(formatISODate(date));
+              }}
+            />
           </PopoverBody>
         </PopoverContent>
       </Portal>

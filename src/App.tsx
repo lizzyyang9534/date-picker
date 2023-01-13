@@ -4,7 +4,8 @@ import './App.css';
 import { DatePicker, DatePickerInput } from './components/datePicker';
 
 function App() {
-  const [date, setDate] = useState(new Date());
+  const [date1, setDate1] = useState(new Date());
+  const [date2, setDate2] = useState(new Date());
 
   return (
     <Flex gap={20} py={10} justify="center">
@@ -13,10 +14,10 @@ function App() {
           Pure Date Picker
         </Heading>
         <DatePicker
-          date={date}
+          date={date1}
           onSelect={(date) => {
             console.log('selected date:', date);
-            setDate(date);
+            setDate1(date);
           }}
         />
       </Box>
@@ -26,10 +27,10 @@ function App() {
           Date Picker Input
         </Heading>
         <DatePickerInput
-          date={date}
+          date={date2}
           onSelect={(date) => {
             console.log('selected date:', date);
-            setDate(date);
+            setDate2(date);
           }}
         />
       </Box>
