@@ -137,7 +137,7 @@ const DatePicker = ({ date, onSelect }: DatePickerProps) => {
               boxSize="40px"
               borderRadius="full"
               color={
-                i === 0 || i === years.length - 1 ? 'brandGray.700' : 'inherit'
+                i === 0 || i === years.length - 1 ? 'brandGray.700' : undefined
               }
               colorScheme={y === year ? 'brand' : 'gray'}
               onClick={() =>
