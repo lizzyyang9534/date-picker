@@ -64,7 +64,7 @@ const DatePicker = ({ date, onSelect }: DatePickerProps) => {
   }, [date, send]);
 
   return (
-    <Flex direction="column" width="250px" minH="296px">
+    <Flex direction="column" width="250px" minH="296px" bgColor="white">
       <Flex justify="space-between" align="center" gap={2}>
         <Button
           variant="ghost"
