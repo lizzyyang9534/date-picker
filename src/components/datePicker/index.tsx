@@ -51,7 +51,7 @@ const DatePicker = ({ date, onSelect }: DatePickerProps) => {
             ? `${MONTHS[month]} ${year}`
             : isMonthView
             ? year
-            : `${years[0]} - ${years[years.length - 1]}`}
+            : `${years[0] + 1} - ${years[years.length - 1] - 1}`}
         </Button>
         <Button
           variant="ghost"
@@ -118,13 +118,16 @@ const DatePicker = ({ date, onSelect }: DatePickerProps) => {
       )}
       {isYearView && (
         <SimpleGrid columns={4} spacing={1} mt={2}>
-          {years.map((y) => (
+          {years.map((y, i) => (
             <Button
               key={month}
               variant={y === year ? 'solid' : 'ghost'}
               size="sm"
               boxSize="40px"
               borderRadius="full"
+              color={
+                i === 0 || i === years.length - 1 ? 'brandGray.700' : 'inherit'
+              }
               colorScheme={y === year ? 'brand' : 'gray'}
               onClick={() =>
                 send({ type: DATE_PICKER_EVENT.SELECT_YEAR, year: y })
