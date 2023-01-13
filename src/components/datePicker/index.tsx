@@ -14,7 +14,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { useMachine } from '@xstate/react';
-import { DatePickerProps } from './types';
+import { DatePickerInputProps, DatePickerProps } from './types';
 import { DAYS, MONTHS } from './constants';
 import {
   datePickerMachine,
@@ -27,7 +27,7 @@ import {
   isToday,
   isValidISODateString,
 } from './utils';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { CalendarIcon } from '@chakra-ui/icons';
 import RoundButton from './components/BrandRoundButton';
 
@@ -158,20 +158,28 @@ const DatePicker = ({ date, onSelect }: DatePickerProps) => {
   );
 };
 
-const DatePickerInput = ({ date, onSelect }: DatePickerProps) => {
+const DatePickerInput = ({
+  date,
+  onSelect,
+  renderInput,
+  ...props
+}: DatePickerInputProps) => {
   const { isOpen, onToggle, onClose } = useDisclosure();
 
   const [innerDate, setInnerDate] = useState(date);
   const [inputValue, setInputValue] = useState('');
   const [isInvalid, setIsInvalid] = useState(false);
 
-  const handleDateInput = (dateString: string) => {
+  const validateDateInput = (dateString: string) => {
     const isValid = isValidISODateString(dateString);
     if (isValid) {
       setInnerDate(new Date(dateString));
     }
     setIsInvalid(!isValid);
   };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setInputValue(e.target.value);
 
   return (
     <Popover
@@ -181,21 +189,25 @@ const DatePickerInput = ({ date, onSelect }: DatePickerProps) => {
       onClose={onClose}
     >
       <PopoverTrigger>
-        <InputGroup>
-          <InputLeftElement
-            color={isOpen ? 'blue.500' : 'inherit'}
-            cursor="pointer"
-            children={<CalendarIcon />}
-            onClick={onToggle}
-          />
-          <Input
-            placeholder="YYYY-MM-DD"
-            value={inputValue}
-            isInvalid={!!inputValue && isInvalid}
-            onBlur={(e) => handleDateInput(e.target.value)}
-            onChange={(e) => setInputValue(e.target.value)}
-          />
-        </InputGroup>
+        {renderInput ? (
+          renderInput({ value: inputValue, onChange: handleInputChange })
+        ) : (
+          <InputGroup>
+            <InputLeftElement
+              color={isOpen ? 'blue.500' : 'inherit'}
+              cursor="pointer"
+              children={<CalendarIcon />}
+              onClick={onToggle}
+            />
+            <Input
+              placeholder="YYYY-MM-DD"
+              value={inputValue}
+              isInvalid={!!inputValue && isInvalid}
+              onBlur={(e) => validateDateInput(e.target.value)}
+              onChange={handleInputChange}
+            />
+          </InputGroup>
+        )}
       </PopoverTrigger>
       <Portal>
         <PopoverContent w="auto">
@@ -208,6 +220,7 @@ const DatePickerInput = ({ date, onSelect }: DatePickerProps) => {
                 setIsInvalid(false);
                 onClose();
               }}
+              {...props}
             />
           </PopoverBody>
         </PopoverContent>
