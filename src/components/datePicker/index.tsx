@@ -215,8 +215,9 @@ const DatePickerInput = ({ date, onSelect }: DatePickerProps) => {
               date={innerDate}
               onSelect={(date) => {
                 onSelect(date);
-                onClose();
                 setInputValue(formatISODate(date));
+                setIsInvalid(false);
+                onClose();
               }}
             />
           </PopoverBody>
