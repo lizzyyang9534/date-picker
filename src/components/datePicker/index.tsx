@@ -14,6 +14,13 @@ const DatePicker = ({ date, onSelect }: DatePickerProps) => {
     context: {
       initialDate: date,
     },
+    actions: {
+      triggerOnSelect: ({ selectedDate }) => {
+        if (selectedDate) {
+          onSelect(selectedDate);
+        }
+      },
+    },
   });
   const { month, year, years, dates, selectedDate } = state.context;
 

@@ -48,7 +48,7 @@ const datePickerMachine = createMachine<DatePickerContext>(
       [State.DATE_VIEW]: {
         on: {
           [Event.SELECT_DATE]: {
-            actions: ['assignSelectedDate'],
+            actions: ['assignSelectedDate', 'triggerOnSelect'],
           },
           [Event.SWITCH_MONTH_VIEW]: {
             target: State.MONTH_VIEW,

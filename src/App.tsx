@@ -10,7 +10,7 @@ function App() {
       <DatePicker
         date={date}
         onSelect={(date) => {
-          console.log(date);
+          console.log('selected date:', date);
           setDate(date);
         }}
       />
