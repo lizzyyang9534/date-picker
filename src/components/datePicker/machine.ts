@@ -1,7 +1,7 @@
 import { createMachine, assign } from 'xstate';
 import { getDisplayDates, getLastMonth, getNextMonth } from './utils';
 import { range } from '../../utils/list';
-import { DISPLAY_WEEK_COUNT } from './constants';
+import { DISPLAY_WEEK_COUNT, YEAR_PAGE_SIZE } from './constants';
 
 enum State {
   DATE_VIEW = 'DATE_VIEW',
@@ -152,20 +152,20 @@ const datePickerMachine = createMachine<DatePickerContext>(
       }),
       assignYears: assign({
         years: ({ year }) => {
-          const startYear = year - (year % 10);
-          return range(startYear - 1, startYear + 10);
+          const startYear = year - (year % YEAR_PAGE_SIZE);
+          return range(startYear - 1, startYear + YEAR_PAGE_SIZE);
         },
       }),
       goLastDecade: assign({
         years: ({ years }) => {
-          return range(years[0] - 10, years[0] + 1);
+          return range(years[0] - YEAR_PAGE_SIZE, years[0] + 1);
         },
       }),
       goNextDecade: assign({
         years: ({ years }) => {
           return range(
             years[years.length - 1] - 1,
-            years[years.length - 1] + 10
+            years[years.length - 1] + YEAR_PAGE_SIZE
           );
         },
       }),

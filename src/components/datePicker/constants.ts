@@ -15,3 +15,5 @@ export const MONTHS = [
 ];
 
 export const DISPLAY_WEEK_COUNT = 6;
+
+export const YEAR_PAGE_SIZE = 10;
