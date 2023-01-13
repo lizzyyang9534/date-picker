@@ -17,3 +17,6 @@
 ### yarn
 1. Run command `yarn`
 1. Run command `yarn build`
+
+## Notes
+- As the comment left in theme.ts, the specified gray text color `#eee` might be too light to see, so I use `#ccc` instead
