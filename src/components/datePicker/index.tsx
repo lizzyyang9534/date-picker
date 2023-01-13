@@ -1,4 +1,15 @@
-import { Button, Flex, SimpleGrid, Text } from '@chakra-ui/react';
+import {
+  Button,
+  Flex,
+  Input,
+  Popover,
+  PopoverBody,
+  PopoverContent,
+  PopoverTrigger,
+  Portal,
+  SimpleGrid,
+  Text,
+} from '@chakra-ui/react';
 import { useMachine } from '@xstate/react';
 import { DatePickerProps } from '../../types';
 import { DAYS, MONTHS } from './constants';
@@ -61,7 +72,7 @@ const DatePicker = ({ date, onSelect }: DatePickerProps) => {
         </Button>
       </Flex>
       {isDateView && (
-        <SimpleGrid columns={7} spacing={1} mt={2}>
+        <SimpleGrid columns={7} spacing={1} mt={2} textAlign="center">
           {DAYS.map((day) => (
             <Text key={day} fontWeight="semibold">
               {day}
@@ -141,4 +152,22 @@ const DatePicker = ({ date, onSelect }: DatePickerProps) => {
     </Flex>
   );
 };
-export default DatePicker;
+
+const DatePickerInput = ({ date, onSelect }: DatePickerProps) => {
+  return (
+    <Popover placement="bottom-start" offset={[0, 0]}>
+      <PopoverTrigger>
+        <Input />
+      </PopoverTrigger>
+      <Portal>
+        <PopoverContent w="auto">
+          <PopoverBody>
+            <DatePicker date={date} onSelect={onSelect} />
+          </PopoverBody>
+        </PopoverContent>
+      </Portal>
+    </Popover>
+  );
+};
+
+export { DatePicker, DatePickerInput };
