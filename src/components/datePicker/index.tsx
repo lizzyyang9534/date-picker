@@ -29,6 +29,7 @@ import {
 } from './utils';
 import { useEffect, useState } from 'react';
 import { CalendarIcon } from '@chakra-ui/icons';
+import RoundButton from './components/BrandRoundButton';
 
 const DatePicker = ({ date, onSelect }: DatePickerProps) => {
   const [state, send] = useMachine(datePickerMachine, {
@@ -93,14 +94,13 @@ const DatePicker = ({ date, onSelect }: DatePickerProps) => {
             </Text>
           ))}
           {dates.map((d, i) => {
-            const isSelected = selectedDate && isSameDay(selectedDate, d);
+            const isSelected = !!selectedDate && isSameDay(selectedDate, d);
             return (
-              <Button
+              <RoundButton
                 key={i}
-                variant={isSelected ? 'solid' : 'ghost'}
+                isActive={isSelected}
                 size="xs"
                 boxSize="32px"
-                borderRadius="full"
                 color={
                   isToday(d) && !isSelected
                     ? 'brand.500'
@@ -108,13 +108,12 @@ const DatePicker = ({ date, onSelect }: DatePickerProps) => {
                     ? 'brandGray.700'
                     : undefined
                 }
-                colorScheme={isSelected ? 'brand' : 'gray'}
                 onClick={() =>
                   send({ type: DATE_PICKER_EVENT.SELECT_DATE, date: d })
                 }
               >
                 {d.getDate()}
-              </Button>
+              </RoundButton>
             );
           })}
         </SimpleGrid>
@@ -122,14 +121,9 @@ const DatePicker = ({ date, onSelect }: DatePickerProps) => {
       {isMonthView && (
         <SimpleGrid columns={4} spacingX={1} spacingY={8} mt={4}>
           {MONTHS.map((m, monthIndex) => (
-            <Button
+            <RoundButton
               key={m}
-              variant={monthIndex === month ? 'solid' : 'ghost'}
-              size="sm"
-              mx="auto"
-              boxSize="40px"
-              borderRadius="full"
-              colorScheme={monthIndex === month ? 'brand' : 'gray'}
+              isActive={monthIndex === month}
               onClick={() =>
                 send({
                   type: DATE_PICKER_EVENT.SELECT_MONTH,
@@ -138,30 +132,25 @@ const DatePicker = ({ date, onSelect }: DatePickerProps) => {
               }
             >
               {m.slice(0, 3)}
-            </Button>
+            </RoundButton>
           ))}
         </SimpleGrid>
       )}
       {isYearView && (
         <SimpleGrid columns={4} spacingX={1} spacingY={8} mt={4}>
           {years.map((y, i) => (
-            <Button
+            <RoundButton
               key={y}
-              variant={y === year ? 'solid' : 'ghost'}
-              size="sm"
-              mx="auto"
-              boxSize="40px"
-              borderRadius="full"
+              isActive={y === year}
               color={
                 i === 0 || i === years.length - 1 ? 'brandGray.700' : undefined
               }
-              colorScheme={y === year ? 'brand' : 'gray'}
               onClick={() =>
                 send({ type: DATE_PICKER_EVENT.SELECT_YEAR, year: y })
               }
             >
               {y}
-            </Button>
+            </RoundButton>
           ))}
         </SimpleGrid>
       )}
