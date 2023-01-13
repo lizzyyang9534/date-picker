@@ -29,7 +29,7 @@ import {
 } from './utils';
 import React, { useEffect, useState } from 'react';
 import { CalendarIcon } from '@chakra-ui/icons';
-import RoundButton from './components/BrandRoundButton';
+import RoundButton from './components/RoundButton';
 
 const DatePicker = ({ date, onSelect }: DatePickerProps) => {
   const [state, send] = useMachine(datePickerMachine, {
