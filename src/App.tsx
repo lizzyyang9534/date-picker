@@ -7,9 +7,15 @@ function App() {
   const [date2, setDate2] = useState(new Date());
 
   return (
-    <Flex gap={20} py={10} justify="center">
+    <Flex
+      gap={20}
+      p={10}
+      pt={[6, 6, 12, 20]}
+      direction={['column', 'column', 'row']}
+      justify="center"
+    >
       <Box>
-        <Heading size="lg" mb={8}>
+        <Heading size={['md', 'md', 'lg']} mb={[4, 4, 8]}>
           Pure Date Picker
         </Heading>
         <DatePicker
@@ -22,7 +28,7 @@ function App() {
       </Box>
 
       <Box>
-        <Heading size="lg" mb={8}>
+        <Heading size={['md', 'md', 'lg']} mb={[4, 4, 8]}>
           Date Picker Input
         </Heading>
         <DatePickerInput
