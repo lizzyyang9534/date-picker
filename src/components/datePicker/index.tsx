@@ -11,7 +11,7 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { useMachine } from '@xstate/react';
-import { DatePickerProps } from '../../types';
+import { DatePickerProps } from './types';
 import { DAYS, MONTHS } from './constants';
 import {
   datePickerMachine,
@@ -49,7 +49,7 @@ const DatePicker = ({ date, onSelect }: DatePickerProps) => {
   };
 
   return (
-    <Flex direction="column" width="250px">
+    <Flex direction="column" width="250px" minH="296px">
       <Flex justify="space-between" align="center" gap={2}>
         <Button
           variant="ghost"
@@ -72,7 +72,7 @@ const DatePicker = ({ date, onSelect }: DatePickerProps) => {
         </Button>
       </Flex>
       {isDateView && (
-        <SimpleGrid columns={7} spacing={1} mt={2} textAlign="center">
+        <SimpleGrid columns={7} spacing={1} mt={4} textAlign="center">
           {DAYS.map((day) => (
             <Text key={day} fontWeight="semibold">
               {day}
@@ -106,12 +106,13 @@ const DatePicker = ({ date, onSelect }: DatePickerProps) => {
         </SimpleGrid>
       )}
       {isMonthView && (
-        <SimpleGrid columns={4} spacing={1} mt={2}>
+        <SimpleGrid columns={4} spacingX={1} spacingY={8} mt={4}>
           {MONTHS.map((m, monthIndex) => (
             <Button
               key={m}
               variant={monthIndex === month ? 'solid' : 'ghost'}
               size="sm"
+              mx="auto"
               boxSize="40px"
               borderRadius="full"
               colorScheme={monthIndex === month ? 'brand' : 'gray'}
@@ -128,12 +129,13 @@ const DatePicker = ({ date, onSelect }: DatePickerProps) => {
         </SimpleGrid>
       )}
       {isYearView && (
-        <SimpleGrid columns={4} spacing={1} mt={2}>
+        <SimpleGrid columns={4} spacingX={1} spacingY={8} mt={4}>
           {years.map((y, i) => (
             <Button
-              key={month}
+              key={y}
               variant={y === year ? 'solid' : 'ghost'}
               size="sm"
+              mx="auto"
               boxSize="40px"
               borderRadius="full"
               color={
