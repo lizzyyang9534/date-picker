@@ -1,6 +1,5 @@
 import { Box, Flex, Heading } from '@chakra-ui/react';
 import { useState } from 'react';
-import './App.css';
 import { DatePicker, DatePickerInput } from './components/datePicker';
 
 function App() {
