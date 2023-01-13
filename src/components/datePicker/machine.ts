@@ -3,7 +3,6 @@ import { getDisplayDates, getLastMonth, getNextMonth } from './utils';
 import { range } from '../../utils/list';
 
 enum State {
-  INIT = 'INIT',
   DATE_VIEW = 'DATE_VIEW',
   MONTH_VIEW = 'MONTH_VIEW',
   YEAR_VIEW = 'YEAR_VIEW',
