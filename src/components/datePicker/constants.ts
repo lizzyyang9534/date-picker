@@ -13,3 +13,5 @@ export const MONTHS = [
   'November',
   'December',
 ];
+
+export const DISPLAY_WEEK_COUNT = 6;

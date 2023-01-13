@@ -1,6 +1,7 @@
 import { createMachine, assign } from 'xstate';
 import { getDisplayDates, getLastMonth, getNextMonth } from './utils';
 import { range } from '../../utils/list';
+import { DISPLAY_WEEK_COUNT } from './constants';
 
 enum State {
   DATE_VIEW = 'DATE_VIEW',
@@ -119,7 +120,7 @@ const datePickerMachine = createMachine<DatePickerContext>(
       }),
       assignDates: assign({
         dates: ({ month, year }) => {
-          const dates = getDisplayDates(month, year, 42);
+          const dates = getDisplayDates(month, year, 7 * DISPLAY_WEEK_COUNT);
           return dates;
         },
       }),
