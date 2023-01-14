@@ -1,13 +1,8 @@
-## How to run this app
-### npm
-1. Run command `npm install`
-1. Run command `npm run start`
-1. Open the link http://localhost:3000 in your browser
-
-### yarn
-1. Run command `yarn`
-1. Run command `yarn start`
-1. Open the link http://localhost:3000 in your browser
+## Demo page
+- Please run this app by the following steps
+  1. Run command `npm install` or `yarn`
+  1. Run command `npm run start` or `yarn start`
+- Go to this link: http://localhost:3000
 
 ## How to build this app
 ### npm
