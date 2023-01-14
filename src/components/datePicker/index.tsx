@@ -9,27 +9,22 @@ import {
   PopoverContent,
   PopoverTrigger,
   Portal,
-  SimpleGrid,
-  Text,
   useDisclosure,
 } from '@chakra-ui/react';
 import { useMachine } from '@xstate/react';
 import { DatePickerInputProps, DatePickerProps } from './types';
-import { DAYS, MONTHS } from './constants';
+import { MONTHS } from './constants';
 import {
   datePickerMachine,
   DATE_PICKER_EVENT,
   DATE_PICKER_STATE,
 } from './machine';
-import {
-  formatISODate,
-  isSameDay,
-  isToday,
-  isValidISODateString,
-} from './utils';
+import { formatISODate, isValidISODateString } from './utils';
 import React, { useEffect, useState } from 'react';
 import { CalendarIcon } from '@chakra-ui/icons';
-import RoundButton from './components/RoundButton';
+import DateView from './components/DateView';
+import MonthView from './components/MonthView';
+import YearView from './components/YearView';
 
 const DatePicker = ({ date, onSelect }: DatePickerProps) => {
   const [state, send] = useMachine(datePickerMachine, {
@@ -87,72 +82,34 @@ const DatePicker = ({ date, onSelect }: DatePickerProps) => {
         </Button>
       </Flex>
       {isDateView && (
-        <SimpleGrid columns={7} spacing={1} mt={4} textAlign="center">
-          {DAYS.map((day) => (
-            <Text key={day} fontWeight="semibold">
-              {day}
-            </Text>
-          ))}
-          {dates.map((d, i) => {
-            const isSelected = !!selectedDate && isSameDay(selectedDate, d);
-            return (
-              <RoundButton
-                key={i}
-                isActive={isSelected}
-                size="xs"
-                boxSize="32px"
-                color={
-                  isToday(d) && !isSelected
-                    ? 'brand.500'
-                    : d.getMonth() !== month
-                    ? 'brandGray.700'
-                    : undefined
-                }
-                onClick={() =>
-                  send({ type: DATE_PICKER_EVENT.SELECT_DATE, date: d })
-                }
-              >
-                {d.getDate()}
-              </RoundButton>
-            );
-          })}
-        </SimpleGrid>
+        <DateView
+          dates={dates}
+          selectedDate={selectedDate}
+          currentMonth={month}
+          onSelect={(date) =>
+            send({ type: DATE_PICKER_EVENT.SELECT_DATE, date })
+          }
+        />
       )}
       {isMonthView && (
-        <SimpleGrid columns={4} spacingX={1} spacingY={8} mt={4}>
-          {MONTHS.map((m, monthIndex) => (
-            <RoundButton
-              key={m}
-              isActive={monthIndex === month}
-              onClick={() =>
-                send({
-                  type: DATE_PICKER_EVENT.SELECT_MONTH,
-                  month: monthIndex,
-                })
-              }
-            >
-              {m.slice(0, 3)}
-            </RoundButton>
-          ))}
-        </SimpleGrid>
+        <MonthView
+          selectedMonth={month}
+          onSelect={(month) =>
+            send({
+              type: DATE_PICKER_EVENT.SELECT_MONTH,
+              month,
+            })
+          }
+        />
       )}
       {isYearView && (
-        <SimpleGrid columns={4} spacingX={1} spacingY={8} mt={4}>
-          {years.map((y, i) => (
-            <RoundButton
-              key={y}
-              isActive={y === year}
-              color={
-                i === 0 || i === years.length - 1 ? 'brandGray.700' : undefined
-              }
-              onClick={() =>
-                send({ type: DATE_PICKER_EVENT.SELECT_YEAR, year: y })
-              }
-            >
-              {y}
-            </RoundButton>
-          ))}
-        </SimpleGrid>
+        <YearView
+          years={years}
+          selectedYear={year}
+          onSelect={(year) =>
+            send({ type: DATE_PICKER_EVENT.SELECT_YEAR, year })
+          }
+        />
       )}
     </Flex>
   );
