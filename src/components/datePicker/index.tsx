@@ -1,6 +1,7 @@
 import {
   Button,
   Flex,
+  IconButton,
   Input,
   InputGroup,
   InputLeftElement,
@@ -21,7 +22,11 @@ import {
 } from './machine';
 import { formatISODate, isValidISODateString } from './utils';
 import React, { useEffect, useState } from 'react';
-import { CalendarIcon } from '@chakra-ui/icons';
+import {
+  CalendarIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+} from '@chakra-ui/icons';
 import DateView from './components/DateView';
 import MonthView from './components/MonthView';
 import YearView from './components/YearView';
@@ -61,12 +66,12 @@ const DatePicker = ({ date, onSelect }: DatePickerProps) => {
   return (
     <Flex direction="column" width="250px" minH="296px" bgColor="white">
       <Flex justify="space-between" align="center" gap={2}>
-        <Button
+        <IconButton
           variant="ghost"
+          icon={<ChevronLeftIcon />}
+          aria-label="previous"
           onClick={() => send({ type: DATE_PICKER_EVENT.PREVIOUS })}
-        >
-          {'<'}
-        </Button>
+        />
         <Button variant="ghost" flex="1" onClick={handleSwitchView}>
           {isDateView
             ? `${MONTHS[month]} ${year}`
@@ -74,12 +79,12 @@ const DatePicker = ({ date, onSelect }: DatePickerProps) => {
             ? year
             : `${years[0] + 1} - ${years[years.length - 1] - 1}`}
         </Button>
-        <Button
+        <IconButton
           variant="ghost"
+          icon={<ChevronRightIcon />}
+          aria-label="next"
           onClick={() => send({ type: DATE_PICKER_EVENT.NEXT })}
-        >
-          {'>'}
-        </Button>
+        />
       </Flex>
       {isDateView && (
         <DateView
