@@ -51,6 +51,10 @@ export const isValidISODateString = (dateString: string) => {
 };
 // Date Utils end
 
+const toDates =
+  (year: number, month: number) =>
+  (dates: number[]): Date[] =>
+    dates.map((date) => new Date(year, month, date));
 export const getDisplayDates = (
   month: number,
   year: number,
@@ -60,27 +64,25 @@ export const getDisplayDates = (
   const totalDaysInThisMonth = daysInMonth(month, year);
   const dayOfStartDate = startDate.getDay();
 
-  const daysInThisMonth = range(1, totalDaysInThisMonth).map(
-    (d) => new Date(year, month, d)
-  );
+  const datesInThisMonth = toDates(year, month)(range(1, totalDaysInThisMonth));
 
   const nextMonth = getNextMonthWithYear(month, year);
-  const daysInNextMonth = range(
-    1,
-    dayCount - (dayOfStartDate + totalDaysInThisMonth)
-  ).map((d) => new Date(nextMonth.year, nextMonth.month, d));
+  const datesInNextMonth = toDates(
+    nextMonth.year,
+    nextMonth.month
+  )(range(1, dayCount - (dayOfStartDate + totalDaysInThisMonth)));
 
-  const displayDates = [...daysInThisMonth, ...daysInNextMonth];
+  const displayDates = datesInThisMonth.concat(datesInNextMonth);
 
   if (dayOfStartDate > 0) {
     const lastMonth = getLastMonthWithYear(month, year);
     const totalDaysInLastMonth = daysInMonth(lastMonth.month, lastMonth.year);
-    const datesInLastMonth = range(
-      totalDaysInLastMonth - dayOfStartDate + 1,
-      totalDaysInLastMonth
-    ).map((d) => new Date(lastMonth.year, lastMonth.month, d));
+    const datesInLastMonth = toDates(
+      lastMonth.year,
+      lastMonth.month
+    )(range(totalDaysInLastMonth - dayOfStartDate + 1, totalDaysInLastMonth));
 
-    return [...datesInLastMonth, ...displayDates];
+    return datesInLastMonth.concat(displayDates);
   }
 
   return displayDates;
