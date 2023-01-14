@@ -9,13 +9,13 @@ type MonthViewProps = {
 const MonthView = ({ selectedMonth, onSelect }: MonthViewProps) => {
   return (
     <SimpleGrid columns={4} spacingX={1} spacingY={8} mt={4}>
-      {MONTHS.map((m, monthIndex) => (
+      {MONTHS.map((month, monthIndex) => (
         <RoundButton
-          key={m}
+          key={month}
           isActive={monthIndex === selectedMonth}
           onClick={() => onSelect(monthIndex)}
         >
-          {m.slice(0, 3)}
+          {month.slice(0, 3)}
         </RoundButton>
       ))}
     </SimpleGrid>
